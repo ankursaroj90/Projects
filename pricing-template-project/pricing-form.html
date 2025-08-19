@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Configuration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .nested-section {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background-color: #f8fafc;
+        }
+
+        .nested-title {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .pricing-tier {
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background-color: white;
+        }
+
+        .pricing-tier-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #718096;
+            margin-left: 0.5rem;
+        }
+
+        .btn-add {
+            background: #48bb78;
+            margin-top: 1rem;
+        }
+
+        .btn-remove {
+            background: #f56565;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .output-section {
+            background: #1a202c;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .json-output {
+            background: #2d3748;
+            border-radius: 5px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #4a5568;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            color: #718096;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .help-text {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Payment Gateway Pricing Configuration</h1>
+            <p>Configure pricing for online payment gateways including cards and UPI</p>
+        </div>
+
+        <form id="pricingForm">
+            <!-- Main Category Tabs -->
+            <div class="tabs">
+                <button type="button" class="tab active" data-tab="online">Online Payments</button>
+            </div>
+
+            <!-- Online Payments Tab -->
+            <div id="online" class="tab-content active">
+                <div class="form-section">
+                    <h2 class="section-title">Payment Gateway Configuration</h2>
+                    
+                    <!-- Cards Section -->
+                    <div class="nested-section">
+                        <h3 class="nested-title">Cards Configuration</h3>
+                        
+                        <!-- Domestic Cards -->
+                        <div class="nested-section">
+                            <h4 class="nested-title">Domestic Cards</h4>
+                            
+                            <!-- Credit Cards -->
+                            <div class="nested-section">
+                                <h5 class="nested-title">Credit Cards</h5>
+                                
+                                <!-- Card Brands -->
+                                <div id="creditCardBrands">
+                                    <div class="nested-section card-brand" data-brand="mastercard">
+                                        <h6 class="nested-title">Mastercard</h6>
+                                        <div id="mastercard-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addCardCategory('mastercard')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="visa">
+                                        <h6 class="nested-title">Visa</h6>
+                                        <div id="visa-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addCardCategory('visa')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="rupay">
+                                        <h6 class="nested-title">RuPay</h6>
+                                        <div id="rupay-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addCardCategory('rupay')">Add Category</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Debit Cards -->
+                            <div class="nested-section">
+                                <h5 class="nested-title">Debit Cards</h5>
+                                <div id="debitCardBrands">
+                                    <div class="nested-section card-brand" data-brand="mastercard">
+                                        <h6 class="nested-title">Mastercard</h6>
+                                        <div id="debit-mastercard-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addDebitCardCategory('mastercard')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="visa">
+                                        <h6 class="nested-title">Visa</h6>
+                                        <div id="debit-visa-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addDebitCardCategory('visa')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="rupay">
+                                        <h6 class="nested-title">RuPay</h6>
+                                        <div id="debit-rupay-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addDebitCardCategory('rupay')">Add Category</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- International Cards -->
+                        <div class="nested-section">
+                            <h4 class="nested-title">International Cards</h4>
+                            <div class="nested-section">
+                                <h5 class="nested-title">Credit Cards</h5>
+                                <div id="intlCreditCardBrands">
+                                    <div class="nested-section card-brand" data-brand="mastercard">
+                                        <h6 class="nested-title">Mastercard</h6>
+                                        <div id="intl-credit-mastercard-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addIntlCreditCardCategory('mastercard')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="visa">
+                                        <h6 class="nested-title">Visa</h6>
+                                        <div id="intl-credit-visa-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addIntlCreditCardCategory('visa')">Add Category</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="nested-section">
+                                <h5 class="nested-title">Debit Cards</h5>
+                                <div id="intlDebitCardBrands">
+                                    <div class="nested-section card-brand" data-brand="mastercard">
+                                        <h6 class="nested-title">Mastercard</h6>
+                                        <div id="intl-debit-mastercard-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addIntlDebitCardCategory('mastercard')">Add Category</button>
+                                    </div>
+                                    
+                                    <div class="nested-section card-brand" data-brand="visa">
+                                        <h6 class="nested-title">Visa</h6>
+                                        <div id="intl-debit-visa-categories"></div>
+                                        <button type="button" class="btn btn-add" onclick="addIntlDebitCardCategory('visa')">Add Category</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- UPI Section -->
+                    <div class="nested-section">
+                        <h3 class="nested-title">UPI Configuration</h3>
+                        
+                        <div class="nested-section">
+                            <h4 class="nested-title">Domestic UPI</h4>
+                            
+                            <!-- Default UPI -->
+                            <div class="nested-section">
+                                <h5 class="nested-title">Default UPI</h5>
+                                <div class="form-group">
+                                    <label for="upi-default-fixed">Fixed Fee</label>
+                                    <input type="text" id="upi-default-fixed" name="upi-default-fixed" placeholder="e.g., 5.0">
+                                    <div class="help-text">Fixed fee for UPI transactions</div>
+                                </div>
+                                <div id="upi-default-pricing"></div>
+                                <button type="button" class="btn btn-add" onclick="addUPIPricingTier('upi-default-pricing')">Add Pricing Tier</button>
+                            </div>
+                            
+                            <!-- UPI Collection Methods -->
+                            <div class="nested-section">
+                                <h5 class="nested-title">UPI Collection Methods</h5>
+                                
+                                <div class="nested-section">
+                                    <h6 class="nested-title">Collect</h6>
+                                    <div id="upi-collect-config"></div>
+                                    <button type="button" class="btn btn-add" onclick="addUPICollectConfig()">Add Collect Configuration</button>
+                                </div>
+                                
+                                <div class="nested-section">
+                                    <h6 class="nested-title">Intent</h6>
+                                    <div id="upi-intent-config"></div>
+                                    <button type="button" class="btn btn-add" onclick="addUPIIntentConfig()">Add Intent Configuration</button>
+                                </div>
+                                
+                                <div class="nested-section">
+                                    <h6 class="nested-title">QR</h6>
+                                    <div id="upi-qr-config"></div>
+                                    <button type="button" class="btn btn-add" onclick="addUPIQRConfig()">Add QR Configuration</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <button type="button" class="btn" onclick="generateJSON()">Generate JSON</button>
+                <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                <button type="button" class="btn btn-secondary" onclick="loadSampleData()">Load Sample Data</button>
+            </div>
+        </form>
+
+        <div class="output-section">
+            <h2 class="section-title" style="color: #e2e8f0;">Generated JSON Output</h2>
+            <div class="json-output" id="jsonOutput">
+                Click "Generate JSON" to see the output here...
+            </div>
+            <button type="button" class="btn" onclick="copyToClipboard()" style="margin-top: 1rem;">Copy JSON</button>
+            <button type="button" class="btn btn-secondary" onclick="downloadJSON()" style="margin-top: 1rem;">Download JSON</button>
+        </div>
+    </div>
+
+    <script src="pricing-form.js"></script>
+</body>
+</html>
+
